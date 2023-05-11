@@ -31,6 +31,15 @@ app.get("/search", (req, res) => {
   res.render("search");
 });
 
+//tạo routing post 
+app.post("/search", (req, res) => {
+  res.render("search");
+});
+
+app.post("/news", (req, res) => {
+  res.render("search");
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
