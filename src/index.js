@@ -5,6 +5,8 @@ const { engine } = require("express-handlebars");
 const app = express();
 const port = 3000;
 
+const route = require("./routes");
+
 //Http logger
 app.use(morgan("combined"));
 
@@ -22,33 +24,9 @@ app.set("view engine", ".hbs");
 app.set("views", path.join(__dirname, "resources/views"));
 //cho engin biết file main.hbs nằm ở đâu, __dirname: src, nếu dùng thêm: path.join(__dirname, 'resources/views'): src/resources/views
 
-app.get("/", (req, res) => {
-  res.render("home"); // phần body của trang web (bên main.hbs) phụ thuộc file được res.render bên đây
-});
+//Routes init
+route(app);
 
-app.get("/news", (req, res) => {
-  res.render("news");
-});
-
-app.get("/search", (req, res) => {
-  console.log(req.query);
-  res.render("search");
-});
-
-//tạo routing post
-app.post("/search", (req, res) => {
-  console.log(req.body);
-  /**
-   * req.body: undefined
-   * req.query: có dữ liệu
-   * vì express chỉ hỗ trợ query, muốn dùng req.body thì add thêm middleware bên trên
-   */
-  res.send("");
-});
-
-app.post("/news", (req, res) => {
-  res.render("search");
-});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
