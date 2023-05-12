@@ -8,6 +8,10 @@ const port = 3000;
 //Http logger
 app.use(morgan("combined"));
 
+//Cài đặt middleware
+app.use(express.urlencoded({ extended: true })); //xử lý các data được gửi lên từ form
+app.use(express.json()); // xử lý data gửi lên từ JS như: XMLHttpRequest, fetch, axios
+
 //Sử dụng static files để truy xuất image, css trên web
 app.use(express.static(path.join(__dirname, "public"))); //http://localhost:3000/img/logo192.png sẽ ra được image
 
@@ -31,9 +35,15 @@ app.get("/search", (req, res) => {
   res.render("search");
 });
 
-//tạo routing post 
+//tạo routing post
 app.post("/search", (req, res) => {
-  res.render("search");
+  console.log(req.body);
+  /**
+   * req.body: undefined
+   * req.query: có dữ liệu
+   * vì express chỉ hỗ trợ query, muốn dùng req.body thì add thêm middleware bên trên
+   */
+  res.send("");
 });
 
 app.post("/news", (req, res) => {
