@@ -7,6 +7,10 @@ const port = 3000;
 
 const route = require('./routes');
 
+//connect database
+const db = require('./config/db');
+db.connect()
+
 //Http logger
 app.use(morgan('combined'));
 
