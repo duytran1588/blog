@@ -1,14 +1,15 @@
 const Course = require("../models/Course");
+const { multipleMongooseToObject } = require("../../ultil/mongoose");
 
 class SiteController {
   //[GET] /home
-  index(req, res) {
+  index(req, res, next) {
     //trả về dữ liệu trên mongodb
-    Course.find()
-      .then(function (courses) {
-        res.json(courses);
+    Course.find({})
+      .then((courses) => {
+        res.render("home", { courses: multipleMongooseToObject(courses) });
       })
-      .catch((err) => res.status().json({ err: "ERROR" }));
+      .catch(next);
   }
 
   //[GET] /search
