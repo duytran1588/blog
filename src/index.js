@@ -25,12 +25,12 @@ app.use(express.static(path.join(__dirname, 'public'))); //http://localhost:3000
 app.engine('.hbs', engine({ extname: '.hbs' })); //định nghĩa file '.hbs' bằng engine()
 app.set('view engine', '.hbs');
 
-app.set('views', path.join(__dirname, 'resources/views'));
-//cho engin biết file main.hbs nằm ở đâu, __dirname: src, nếu dùng thêm: path.join(__dirname, 'resources/views'): src/resources/views
+app.set('views', path.join(__dirname, 'resources', 'views'));
+//cho engin biết file main.hbs nằm ở đâu, __dirname: src, nếu dùng thêm: path.join(__dirname, 'resources', 'views'): src/resources/views
 
 //Routes init
 route(app);
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`App listening on port ${port}`);
 });
