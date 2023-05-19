@@ -23,7 +23,7 @@ class CourseController {
 
     const course = new Course(formData);
 
-    course.save().then(res.redirect("/")).catch(next);
+    course.save().then(res.redirect("/me/stored/courses")).catch(next);
   }
 
   // {GET} /course/:id/edit
@@ -44,7 +44,28 @@ class CourseController {
 
   // {DELETE} /course/:id
   destroy(req, res, next) {
+    /**
+     * Ko xoá thực trên database mà áp dụng kỹ thuật xoá mềm để sau này có thể truy vấn
+     * Dùng method delete của thư viện mongoose-delete chứ ko dùng deleteOne của mongoose
+     */
+    Course.delete({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
+  }
+
+  // {DELETE} /course/:id/force
+  forceDestroy(req, res, next) {
+    /**
+     *  Xoá thực khỏi thùng rác
+     */
     Course.deleteOne({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
+  }
+
+  // {PATCH} /course/:id/restore
+  restore(req, res, next) {
+    Course.restore({ _id: req.params.id })
       .then(() => res.redirect("back"))
       .catch(next);
   }
