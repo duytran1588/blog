@@ -17,3 +17,20 @@ h2 {
   border-radius: 50%;
   object-fit: cover;
 }
+
+.table {
+  th, td {
+    vertical-align: middle;
+  }
+}
+
+td {
+  .form-check-input {
+    position: unset;
+  }
+}
+
+.checkbox-select-all-options {
+  width: 140px;
+  margin: 0 16px;
+}
