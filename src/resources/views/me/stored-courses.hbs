@@ -17,7 +17,7 @@
       <option value="delete">Xoá</option>      
     </select>   
 
-    <button class="btn btn-primary btn-sm check-all-submit-btn disabled" >
+    <button class="btn btn-primary btn-sm check-all-submit-btn" disabled>
       Thực hiện
     </button>
   </div>
@@ -138,24 +138,15 @@
       let isCheckedAll = courseItemCheckbox.length === $('input[name="courseIds[]"]:checked').length;
       checkboxAll.prop('checked', isCheckedAll);
       renderCheckBoxAllBtn();
-    })
-
-    //check if checkAllSubmitBtn is submittable or not
-    checkAllSubmitBtn.on('submit', function(e) {
-       let isSubmittable = !checkAllSubmitBtn.hasClass('disabled');
-
-      if (!isSubmittable) {
-        e.preventDefault();
-      }      
-    })
+    })    
 
     //Rerender btn thực hiện
     function renderCheckBoxAllBtn() {
       let checkedBoxCount = $('input[name="courseIds[]"]:checked').length;
       if(checkedBoxCount > 0) {
-        checkAllSubmitBtn.removeClass('disabled')
+        checkAllSubmitBtn.attr('disabled', false);
       } else {
-        checkAllSubmitBtn.addClass('disabled')
+        checkAllSubmitBtn.attr('disabled', true);
       }
     }
   })
