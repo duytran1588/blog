@@ -15,14 +15,31 @@ db.connect();
 //Http logger
 app.use(morgan("combined"));
 
-//Cài đặt middleware
-app.use(express.urlencoded({ extended: true })); //xử lý các data được gửi lên từ form
+//Cài đặt các middleware trong app.use
+app.use(express.urlencoded({ extended: true })); //express.urlencoded() là 1 middleware xử lý, cấu trúc lại các data được gửi lên từ form và lưu chúng vào object body
+
 app.use(express.json()); // xử lý data gửi lên từ JS như: XMLHttpRequest, fetch, axios
 
 //giúp override lại method trong form của html
-app.use(methodOverride('_method'));
+app.use(methodOverride("_method"));
 
-//Sử dụng static files để truy xuất image, css trên web
+app.use(middleware); //cách khai báo để toàn bộ path của ứng dụng phải đi qua middleware
+
+function middleware(req, res, next) {
+  if (["vethuong", "vevip"].includes(req.query.ve)) {
+    req.face = "gach gach gach"; //chỉnh sửa lại data trong req
+    return next(); // phải có next thì function tiếp theo mới dc gọi, ko có next(), ứng dụng sẽ quay vòng
+  }
+  res.status(403).json({
+    message: "Access denied",
+  });
+}
+
+/**
+ * Sử dụng static files để truy xuất image, css trên web
+ * expres.static là 1 middleware
+ */
+
 app.use(express.static(path.join(__dirname, "public"))); //http://localhost:3000/img/logo192.png sẽ ra được image
 
 //template engine

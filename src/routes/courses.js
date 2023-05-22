@@ -3,7 +3,18 @@ const router = express.Router();
 
 const courseController = require("../app/controllers/CourseController");
 
-router.get("/create", courseController.create);
+//thêm middleware cho route '/create/'
+router.get(
+  "/create",
+  //tạo middleware
+  function (req, res, next) {
+    if (req.query.ve === "vip") {
+      return next(); // thoả điều kiện thì middleware cho phép function kế tiếp thực thi
+    }
+    res.json({ message: "Access denied" });
+  },
+  courseController.create
+);
 router.post("/store", courseController.store);
 router.get("/:slug", courseController.show);
 router.get("/:id/edit", courseController.edit);
