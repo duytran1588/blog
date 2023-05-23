@@ -5,11 +5,13 @@ const morgan = require("morgan");
 const { engine } = require("express-handlebars");
 const app = express();
 const port = 3000;
+const sortMiddleware = require("./app/middleware/SortMiddleware");
 
 const route = require("./routes");
 
 //connect database
 const db = require("./config/db");
+const SortMiddleware = require("./app/middleware/SortMiddleware");
 db.connect();
 
 //Http logger
@@ -23,17 +25,8 @@ app.use(express.json()); // xử lý data gửi lên từ JS như: XMLHttpReques
 //giúp override lại method trong form của html
 app.use(methodOverride("_method"));
 
-app.use(middleware); //cách khai báo để toàn bộ path của ứng dụng phải đi qua middleware
-
-function middleware(req, res, next) {
-  if (["vethuong", "vevip"].includes(req.query.ve)) {
-    req.face = "gach gach gach"; //chỉnh sửa lại data trong req
-    return next(); // phải có next thì function tiếp theo mới dc gọi, ko có next(), ứng dụng sẽ quay vòng
-  }
-  res.status(403).json({
-    message: "Access denied",
-  });
-}
+//add sortMiddleware cho toàn bộ route trong project
+app.use(sortMiddleware);
 
 /**
  * Sử dụng static files để truy xuất image, css trên web
@@ -50,6 +43,35 @@ app.engine(
     helpers: {
       sum: function (a, b) {
         return a + b;
+      },
+      sortable: (field, sort) => {
+        
+        // Ko có line code này thì tất cả các cột đều có chung 1 loại icon sort
+        const sortType = field === sort.column ? sort.type : "default";
+
+        
+        const types = {
+          default: "desc",
+          asc: "desc",
+          desc: "asc",
+        };
+        
+        const icons = {
+          default: "fa-solid fa-sort",
+          asc: "fa-solid fa-sort-up",
+          desc: "fa-solid fa-sort-down",
+        };
+        
+        const type = types[sortType];
+        const icon = icons[sortType];
+
+        //fa-sort, type: desc
+
+        return `
+          <a href="?_sort&column=${field}&type=${type}">
+            <i class="${icon}"></i>
+          </a>
+        `;
       },
     },
   })

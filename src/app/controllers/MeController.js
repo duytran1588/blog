@@ -4,16 +4,25 @@ const { multipleMongooseToObject } = require("../../ultil/mongoose");
 class MeController {
   //[GET] /me/stored/courses
   storeCourses(req, res, next) {
+    //sort
+    let courseQuery = Course.find({});
+
+    if (req.query.hasOwnProperty("_sort")) {
+      courseQuery = courseQuery.sort({
+        [req.query.column]: req.query.type,
+      });
+    }
+
     //mỗi phần tử trong mảng là 1 promise
-    Promise.all([Course.find({}), Course.countDocumentsDeleted()])
+    Promise.all([courseQuery, Course.countDocumentsDeleted()])
       // mỗi kết quả trong mảng là kết quả mỗi promise bên trên trả về
       .then(([courses, count]) => {
         res.render("me/stored-courses", {
-          count,
           courses: multipleMongooseToObject(courses),
+          count,
         });
       })
-      .catch(next);   
+      .catch(next);
   }
 
   //[GET] /me/trash/courses
